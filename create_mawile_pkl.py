@@ -88,7 +88,7 @@ class XML_preprocessor(object):
 
 
 def do_create_pkl():
-    pkl_path = './data/picles/'
+    pkl_path = './data/pickles/'
     xml_path = './data/annotations/'
     data = XML_preprocessor(xml_path).data
     pickle.dump(data, open(pkl_path + 'mawile.pkl', 'wb'))
