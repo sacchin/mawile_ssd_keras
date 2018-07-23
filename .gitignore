@@ -1,0 +1,8 @@
+
+mawile_ssd_keras_weight.hdf5
+mawile_ssd_keras_model.hdf5
+__pycache__/ssd_utils.cpython-35.pyc
+__pycache__/ssd_training.cpython-35.pyc
+__pycache__/ssd_layers.cpython-35.pyc
+*.pyc
+.ipynb_checkpoints/training-checkpoint.ipynb
