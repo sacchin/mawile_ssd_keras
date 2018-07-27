@@ -205,7 +205,7 @@ def do_kucheat_training():
     pkl_path = './data/pickles/'
     weight_path = './data/weights/'
     checkpoints_path = './checkpoints/'
-    path_prefix = 'C:/Users/saton/Documents/git/data/test/fig/'
+    path_prefix = './data/images/'
 
     # for hatena
     batch_size = 1

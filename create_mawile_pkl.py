@@ -41,7 +41,7 @@ class XML_preprocessor(object):
 
     def _to_one_hot(self, name):
         one_hot_vector = [0] * self.num_classes
-        if name == 'aeroplane':  # hatenaから変更
+        if name == 'kucheat':  # aeroplaneから変更
             one_hot_vector[0] = 1
         elif name == 'bicycle':
             one_hot_vector[1] = 1
