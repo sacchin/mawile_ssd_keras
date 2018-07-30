@@ -6,3 +6,4 @@ __pycache__/ssd_training.cpython-35.pyc
 __pycache__/ssd_layers.cpython-35.pyc
 *.pyc
 .ipynb_checkpoints/training-checkpoint.ipynb
+.ipynb_checkpoints/predictor-checkpoint.ipynb
