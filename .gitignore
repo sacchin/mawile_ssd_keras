@@ -7,3 +7,6 @@ __pycache__/ssd_layers.cpython-35.pyc
 *.pyc
 .ipynb_checkpoints/training-checkpoint.ipynb
 .ipynb_checkpoints/predictor-checkpoint.ipynb
+.ipynb_checkpoints/image_augmentation-checkpoint.ipynb
+*.png
+*.jpg
