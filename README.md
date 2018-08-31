@@ -1,6 +1,22 @@
 # Mawile Detection
 
-## SetUp
+## Training Setup
+
+スポットインスタンスのリクエスト
+
+インスタンスの作成
+* ステップ1 
+    * AMI：AmazonLinux2の
+* ステップ2
+    * GPU コンピューティング: p2.xlarge
+* ステップ3: インスタンスの詳細の設定
+    * スポットインスタンスのリクエストにチェックを入れる
+    * 最大価格の設定
+        * 現在の価格という欄が現れて、ap-northeast-1a:$0.4626などが表敬式で表示されている
+        * この表示価格より高い金額を設定する
+            * 上記の場合、0.5だとエラーとなり、0.6でうまく作成できたので、ギリギリを攻めすぎるとダメかも
+* セキュリティグループの8000を許可
+* 作成されたインスタンスのグローバルアドレスにSSHして、下記のコマンドを実行する
 
 ```
 [ec2-user@ip-x-x-x-X ~]$ sudo yum -y upgrade
@@ -13,36 +29,34 @@
 [ec2-user@ip-x-x-x-X ~]$ sudo chown -R ec2-user:ec2-user /usr/bin/.pyenv
 [ec2-user@ip-x-x-x-X ~]$ vi ~/.bashrc
 
+# 下記を末尾に追記
+# from
 export PYENV_ROOT="/usr/bin/.pyenv"
 if [ -d "${PYENV_ROOT}" ]; then
 export PATH=${PYENV_ROOT}/bin:$PATH
 eval "$(pyenv init -)"
 fi
+# to
 
 [ec2-user@ip-x-x-x-X ~]$ source ~/.bashrc
-[ec2-user@ip-x-x-x-X ~]$ pyenv
-pyenv 1.2.6
-Usage: pyenv <command> [<args>]
-
-Some useful pyenv commands are:
-   commands    List all available pyenv commands
-   local       Set or show the local application-specific Python version
-   global      Set or show the global Python version
-   shell       Set or show the shell-specific Python version
-   install     Install a Python version using python-build
-   uninstall   Uninstall a specific Python version
-   rehash      Rehash pyenv shims (run this after installing executables)
-   version     Show the current Python version and its origin
-   versions    List all Python versions available to pyenv
-   which       Display the full path to an executable
-   whence      List all Python versions that contain the given executable
-
-See `pyenv help <command>' for information on a specific command.
-For full documentation, see: https://github.com/pyenv/pyenv#readme
 [ec2-user@ip-x-x-x-X ~]$ pyenv install --list
-[ec2-user@ip-x-x-x-X ~]$ pyenv install anaconda3-5.1.0
-[ec2-user@ip-x-x-x-X ~]$ pyenv global anaconda3-5.1.0
+``` 
+
+で、ズラッと一覧が表示されればOK
+上記の一覧からanacondaの最新バージョンを選択。
+筆者の場合は`3-5.2.0`
+
+```
+[ec2-user@ip-x-x-x-X ~]$ pyenv install anaconda3-5.2.0
+[ec2-user@ip-x-x-x-X ~]$ pyenv global anaconda3-5.2.0
 [ec2-user@ip-x-x-x-X ~]$ python --version
+```
+
+ここで、`Python 3.6.5 :: Anaconda, Inc.` と表示されていればOK
+
+```
+[ec2-user@ip-x-x-x-X ~]$ conda install keras
+[ec2-user@ip-x-x-x-X ~]$ conda install tensorflow
 [ec2-user@ip-x-x-x-X ~]$ conda install -c conda-forge jupyterhub
 [ec2-user@ip-x-x-x-X ~]$ cd /home/ec2-user/
 [ec2-user@ip-x-x-x-X ~]$ mkdir jupyterhub
@@ -54,30 +68,50 @@ Writing default config to: jupyterhub_config.py
 #c.Spawner.notebook_dir = ''
 c.Spawner.notebook_dir = '~/notebook'
 
-[ec2-user@ip-x-x-x-X ~]$ echo jupyterhub -f /etc/jupyterhub/jupyterhub_config.py > jupyterhub.sh
-[ec2-user@ip-x-x-x-X ~]$ su -l root ./jupyterhub.sh
+[ec2-user@ip-x-x-x-X ~]$ sudo passwd ec2-user
+[ec2-user@ip-x-x-x-X ~]$ sudo reboot
+```
+再起動まで待ち、再びSSHする。
 
-[1]+  Done                    sudo echo su -l root jupyterhub.sh
-[ec2-user@ip-x-x-x-X ~]$ sudo adduser satonaka
-[ec2-user@ip-x-x-x-X ~]$ passwd satonaka
-passwd: Only root can specify a user name.
-[ec2-user@ip-x-x-x-X ~]$ sudo passwd satonaka
-Changing password for user satonaka.
-New password: 
-BAD PASSWORD: The password fails the dictionary check - it is based on a dictionary word
-Retype new password: 
-passwd: all authentication tokens updated successfully.
-[ec2-user@ip-x-x-x-X ~]$ conda -y install keras
-[ec2-user@ip-x-x-x-X ~]$ conda -y install tensorflow
+```
+[ec2-user@ip-x-x-x-X ~]$ jupyterhub -f /etc/jupyterhub/jupyterhub_config.py　&
+
+```
+
+ip address:8000にアクセスするとjupyterhubのログイン画面が表示されるので、ec2-userでログイン（パスワードは上記で設定したもの）できたらOK
+
+```
 [ec2-user@ip-x-x-x-X ~]$ git clone https://github.com/sacchin/mawile_ssd_keras.git
 [ec2-user@ip-x-x-x-X ~]$ cd mawile_ssd_keras/
 [ec2-user@ip-x-x-x-X ~]$ git checkout add_training_code
-[ec2-user@ip-x-x-x-X ~]$ mv /home/ec2-user/kucheat_anotation.zip /home/ec2-user/mawile_ssd_keras/data
-[ec2-user@ip-x-x-x-X ~]$ unzip kucheat_anotation.zip
-[ec2-user@ip-x-x-x-X ~]$ rm annotations/ -r
+```
+こっからダウンロードしたzipファイルを送信
+
+```
+[ec2-user@ip-x-x-x-X ~]$ mv /home/ec2-user/images.zip /home/ec2-user/mawile_ssd_keras/data
+[ec2-user@ip-x-x-x-X ~]$ cd /home/ec2-user/mawile_ssd_keras/data
 [ec2-user@ip-x-x-x-X ~]$ rm images/ -r
-[ec2-user@ip-x-x-x-X ~]$ mv origin/ images/
-[ec2-user@ip-x-x-x-X ~]$ mv poke/ annotations/
+[ec2-user@ip-x-x-x-X ~]$ unzip images.zip
+```
+
+
+* 再びjupyterhubにログインして、mawile_ssd_keras/kucheat_training.pyを開く
+    * 211行目: batch_size = 10
+    * 260行目: nb_epoch = 10
+* training.ipynbを開いて、2行目までを実行する
+    * /home/ec2-user/mawile_ssd_keras/data/weights
+    * /home/ec2-user/mawile_ssd_keras/data/checkpoints
+
+## Web Application Setup
+* 静的ファイルの参照は、nginxの設定が一番の問題でした。
+* 事前にDocker Hubでレポジトリを作成しておく
+
+```
+$ docker tag flaskapp_uwsgi sacchin/mawile_detector:latest
+$ docker push sacchin/mawile_detector:latest
+$ docker tag flaskapp_nginx sacchin/mawile_detector_nginx:latest
+$ docker push sacchin/mawile_detector_nginx:latest
+```
 
 ## 参考
 * https://qiita.com/michimani/items/fc64dcbe721d91579ccb
