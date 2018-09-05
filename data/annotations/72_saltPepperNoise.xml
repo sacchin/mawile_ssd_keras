@@ -1,5 +1,5 @@
 <annotation>
-<filename>71.jpg</filename>
+<filename>72.jpg</filename>
 <source>
     <database>original</database>
     <annotation>original</annotation>
@@ -11,8 +11,8 @@
     <name>?</name>
 </owner>
     <size>
-        <width> 346</width>
-        <height> 461</height>
+        <width> 461</width>
+        <height> 346</height>
         <depth>3</depth>
     </size>
     <object>
@@ -21,10 +21,10 @@
         <truncated>1</truncated>
         <difficult>0</difficult>
         <bndbox>
-            <xmin> 199</xmin>
-            <ymin> 113</ymin>
-            <xmax> 295</xmax>
-            <ymax> 190</ymax>
+            <xmin> 377</xmin>
+            <ymin> 140</ymin>
+            <xmax> 435</xmax>
+            <ymax> 206</ymax>
         </bndbox>
     </object>
 </annotation>

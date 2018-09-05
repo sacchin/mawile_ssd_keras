@@ -11,8 +11,8 @@
     <name>?</name>
 </owner>
     <size>
-        <width> 4608</width>
-        <height> 3456</height>
+        <width> 461</width>
+        <height> 346</height>
         <depth>3</depth>
     </size>
     <object>
@@ -21,10 +21,10 @@
         <truncated>1</truncated>
         <difficult>0</difficult>
         <bndbox>
-            <xmin> 2188</xmin>
-            <ymin> 1336</ymin>
-            <xmax> 2430</xmax>
-            <ymax> 1584</ymax>
+            <xmin> 220</xmin>
+            <ymin> 135</ymin>
+            <xmax> 244</xmax>
+            <ymax> 158</ymax>
         </bndbox>
     </object>
 </annotation>
