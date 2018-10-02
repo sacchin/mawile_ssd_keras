@@ -208,7 +208,7 @@ def do_kucheat_training():
     path_prefix = './data/images/'
 
     # for hatena
-    batch_size = 1
+    batch_size = 10
     NUM_CLASSES = 21
 
     input_shape = (300, 300, 3)
@@ -257,7 +257,7 @@ def do_kucheat_training():
         optimizer=optim,
         loss=MultiboxLoss(NUM_CLASSES, neg_pos_ratio=2.0).compute_loss)
 
-    nb_epoch = 1
+    nb_epoch = 50
     history = model.fit_generator(
         gen.generate(True),
         gen.train_batches,
@@ -266,7 +266,7 @@ def do_kucheat_training():
         callbacks=callbacks,
         validation_data=gen.generate(False),
         nb_val_samples=gen.val_batches,
-        nb_worker=1)
+        nb_worker=4)
 
     model.save_weights('mawile_ssd_keras_weight.hdf5')
     model.save('mawile_ssd_keras_model.hdf5')

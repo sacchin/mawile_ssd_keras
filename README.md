@@ -6,9 +6,9 @@
 
 インスタンスの作成
 * ステップ1 
-    * AMI：AmazonLinux2の
+    * AMI：AmazonLinux2を選択
 * ステップ2
-    * GPU コンピューティング: p2.xlarge
+    * GPU コンピューティング: p2.xlargeを選択
 * ステップ3: インスタンスの詳細の設定
     * スポットインスタンスのリクエストにチェックを入れる
     * 最大価格の設定
@@ -20,7 +20,6 @@
 
 ```
 [ec2-user@ip-x-x-x-X ~]$ sudo yum -y upgrade
-[ec2-user@ip-x-x-x-X ~]$ sudo yum -y install git
 [ec2-user@ip-x-x-x-X ~]$ sudo yum -y install git tmux emacs gcc gcc-c++ python-setuptools python-devel 
 [ec2-user@ip-x-x-x-X ~]$ sudo git clone https://github.com/yyuu/pyenv.git /usr/bin/.pyenv
 [ec2-user@ip-x-x-x-X ~]$ cd /usr/bin/.pyenv
@@ -94,10 +93,16 @@ ip address:8000にアクセスするとjupyterhubのログイン画面が表示�
 [ec2-user@ip-x-x-x-X ~]$ unzip images.zip
 ```
 
-
 * 再びjupyterhubにログインして、mawile_ssd_keras/kucheat_training.pyを開く
     * 211行目: batch_size = 10
-    * 260行目: nb_epoch = 10
+    * 260行目: nb_epoch = 50
+    * 269行目: nb_worker = 4
+        * nb_worker = 1のときの処理時間
+            * Epoch1:1712s 20s/step 
+            * Epoch2:1612s 19s/step
+            * Epoch3:1624s 19s/step
+            * Epoch4:1614s 19s/step
+        * nb_worker = 4のときの処理時間
 * training.ipynbを開いて、2行目までを実行する
     * /home/ec2-user/mawile_ssd_keras/data/weights
     * /home/ec2-user/mawile_ssd_keras/data/checkpoints
@@ -112,6 +117,32 @@ $ docker push sacchin/mawile_detector:latest
 $ docker tag flaskapp_nginx sacchin/mawile_detector_nginx:latest
 $ docker push sacchin/mawile_detector_nginx:latest
 ```
+$ docker-compose -build
+$ docker exec -it influxdb bash
+
+
+```
+$ sudo yum update -y
+$ sudo yum install -y docker git
+$ sudo service docker start
+$ sudo usermod -a -G docker ec2-user
+$ sudo service docker restart
+$ exit
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+$ docker-compose --version
+$ git clone https://github.com/sacchin/kucheat-detector-web.git
+$ cd kucheat-detector-web
+$ docker-compose -build
+gitには認証情報など上げていないので、ここで追加
+$ docker-compose up -d
+$ docker ps -a
+```
+--dns=IPアドレス
+https://qiita.com/masch/items/a5ef84998fb7784f9115
+https://qiita.com/yujiro0102/items/8a58fa92b861edd14547
+Docker Compose - docker-compose.yml リファレンス
+https://qiita.com/zembutsu/items/9e9d80e05e36e882caaa
 
 ## 参考
 * https://qiita.com/michimani/items/fc64dcbe721d91579ccb
